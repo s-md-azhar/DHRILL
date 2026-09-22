@@ -46,7 +46,9 @@ export default function Header({ health, routingTier, onOpenSettings, onReset, t
         {/* API Monospace Status Badge */}
         <div className="status-badge-mono" title="API Status">
           <Activity size={12} style={{ color: 'var(--status-verified-text)' }} />
-          <span style={{ color: 'var(--status-verified-text)' }}>API: 200 OK</span>
+          <span style={{ color: 'var(--status-verified-text)' }}>
+            {health?.service?.includes('Standalone') ? 'STANDALONE: ACTIVE' : 'API: 200 OK'}
+          </span>
         </div>
 
         {/* Theme Toggle (Dark / Light) */}

@@ -13,6 +13,7 @@ export default function SettingsModal({
   const [geminiKey, setGeminiKey] = useState(apiKeys.gemini || '');
   const [groqKey, setGroqKey] = useState(apiKeys.groq || '');
   const [openRouterKey, setOpenRouterKey] = useState(apiKeys.openrouter || '');
+  const [apiUrl, setApiUrl] = useState(() => localStorage.getItem('dhrill_api_url') || '');
   const [savedStatus, setSavedStatus] = useState(false);
 
   const handleSave = () => {
@@ -21,6 +22,11 @@ export default function SettingsModal({
       groq: groqKey.trim(),
       openrouter: openRouterKey.trim()
     });
+    if (apiUrl.trim()) {
+      localStorage.setItem('dhrill_api_url', apiUrl.trim());
+    } else {
+      localStorage.removeItem('dhrill_api_url');
+    }
     setSavedStatus(true);
     setTimeout(() => {
       setSavedStatus(false);
@@ -32,21 +38,33 @@ export default function SettingsModal({
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <span>Engine Configuration (Routing Credentials)</span>
+          <span>Engine Configuration & Credentials</span>
           <button className="btn-control-icon" onClick={onClose} aria-label="Close configuration">
             <X size={14} />
           </button>
         </div>
 
         <div className="modal-body">
-          <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', lineHeight: 1.5 }}>
-            Configure optional external frontier API credentials for fallback escalation and compound claim arbitration. 
-            All core embeddings and DeBERTa-v3 cross-encoder NLI evaluate 100% locally.
+          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', lineHeight: 1.5, background: 'var(--bg-card)', padding: '8px 10px', borderRadius: '4px', border: '1px solid var(--border-grid)' }}>
+            <span style={{ color: 'var(--status-verified-text)', fontWeight: 'bold' }}>ZERO-CONFIG RUNTIME:</span> Core NLI decomposition and all benchmark presets operate without any API keys. Any credentials entered here remain strictly sandboxed in your browser's private localStorage.
           </div>
 
           <div>
             <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>
-              Gemini API Key (Primary Fallback ≤12 RPM)
+              Custom Backend API Endpoint (Optional)
+            </div>
+            <input
+              type="text"
+              className="input-field-mono"
+              value={apiUrl}
+              onChange={(e) => setApiUrl(e.target.value)}
+              placeholder="e.g. https://dhrill-backend.onrender.com or leave blank for /api"
+            />
+          </div>
+
+          <div>
+            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              Gemini API Key (Optional Fallback Arbitration ≤12 RPM)
             </div>
             <input
               type="password"
@@ -59,7 +77,7 @@ export default function SettingsModal({
 
           <div>
             <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>
-              Groq API Key (Secondary Fallback ≤25 RPM)
+              Groq API Key (Optional Fallback Arbitration ≤25 RPM)
             </div>
             <input
               type="password"
@@ -72,7 +90,7 @@ export default function SettingsModal({
 
           <div>
             <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginBottom: '4px', textTransform: 'uppercase' }}>
-              OpenRouter API Key (Tertiary Fallback ≤15 RPM)
+              OpenRouter API Key (Optional Fallback Arbitration ≤15 RPM)
             </div>
             <input
               type="password"

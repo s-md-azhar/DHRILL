@@ -65,12 +65,7 @@ export default function App() {
 
       const cases = await fetchDemoCases();
       setDemoCases(cases);
-
-      // Auto-load first demo case (Clinical Dosage) for instantaneous demonstration
-      if (cases.length > 0) {
-        const first = cases[0];
-        handleSelectCase(first);
-      }
+      // Clean initial state: let user view intuitive placeholders and select a benchmark preset
     }
     init();
   }, []);
