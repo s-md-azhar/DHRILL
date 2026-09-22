@@ -1,7 +1,7 @@
 import React from 'react';
-import { Sliders, RotateCcw, Activity, Sun, Moon } from 'lucide-react';
+import { Sliders, Activity, Sun, Moon } from 'lucide-react';
 
-export default function Header({ health, routingTier, onOpenSettings, onReset, theme, onToggleTheme }) {
+export default function Header({ health, routingTier, onOpenSettings, theme, onToggleTheme }) {
   const isCuda = health?.gpu?.cuda_available;
   const deviceLabel = isCuda 
     ? `CUDA: ${health.gpu.device_name}` 
@@ -59,16 +59,6 @@ export default function Header({ health, routingTier, onOpenSettings, onReset, t
           aria-label="Toggle color theme"
         >
           {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
-        </button>
-
-        {/* Reset Action */}
-        <button 
-          className="btn-control-icon" 
-          onClick={onReset} 
-          title="Reset Workspace"
-          aria-label="Reset workspace"
-        >
-          <RotateCcw size={13} />
         </button>
 
         {/* Config Modal */}

@@ -492,5 +492,400 @@ export const CLIENT_DEMO_RESULTS = {
       "demo_mode": true,
       "acoustic_bore_depth": 3
     }
+  },
+  "earnings_metrics": {
+    "inspection_id": "cd62c5ec-2bfa-48de-bc3b-b01e8afe5739",
+    "cached": true,
+    "latency_ms": 0.45,
+    "device_used": "precomputed_demo",
+    "routing_tier": "local-only",
+    "metrics": {
+      "hallucination_score": 0.667,
+      "faithfulness_score": 0.333,
+      "total_claims": 3,
+      "verified_claims": 1,
+      "contradicted_claims": 2,
+      "ungrounded_claims": 0,
+      "ambiguous_claims": 0,
+      "hallucination_density": 0.667
+    },
+    "claims": [
+      {
+        "claim_id": "c_01",
+        "claim_text": "Datadog reported Q3 revenue of $890 million, representing a robust 45% year-over-year growth rate",
+        "start_char": 0,
+        "end_char": 98,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "probabilities": {
+          "entailment": 0.0002,
+          "neutral": 0.0015,
+          "contradiction": 0.95
+        },
+        "best_evidence": {
+          "passage_id": "p_00",
+          "text": "Datadog announced Q3 revenue of $690 million, representing an increase of 26% year-over-year. Operating income was $115 million under non-GAAP measures.",
+          "similarity_score": 0.7975,
+          "source": "ref_passage:sentences_1-2"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_01",
+            "text": "Operating income was $115 million under non-GAAP measures. Free cash flow for the quarter was $204 million with a 30% margin.",
+            "similarity_score": 0.3439,
+            "source": "ref_passage:sentences_2-3"
+          },
+          {
+            "passage_id": "p_02",
+            "text": "Free cash flow for the quarter was $204 million with a 30% margin. The company had 3,490 customers with ARR of $100k or more.",
+            "similarity_score": 0.3049,
+            "source": "ref_passage:sentences_3-4"
+          }
+        ],
+        "entity_conflicts": [
+          {
+            "entity_type": "PERCENT",
+            "claim_value": "45%",
+            "context_value": "26%",
+            "discrepancy_type": "NUMERICAL_MISMATCH",
+            "description": "Percentage '45%' in claim contradicts reference percentage(s): 26%."
+          },
+          {
+            "entity_type": "CURRENCY",
+            "claim_value": "$890 million",
+            "context_value": "$690 million, $115 million",
+            "discrepancy_type": "NUMERICAL_MISMATCH",
+            "description": "Financial figure '$890 million' in claim conflicts with reference: $690 million, $115 million."
+          }
+        ],
+        "arbitration_source": "entity_sieve",
+        "explanation": "Entity/Numerical conflict detected: Percentage '45%' in claim contradicts reference percentage(s): 26%."
+      },
+      {
+        "claim_id": "c_02",
+        "claim_text": "Operating income reached $115 million",
+        "start_char": 99,
+        "end_char": 137,
+        "verdict": "VERIFIED",
+        "confidence": 0.987,
+        "probabilities": {
+          "entailment": 0.9871,
+          "neutral": 0.0126,
+          "contradiction": 0.0003
+        },
+        "best_evidence": {
+          "passage_id": "p_01",
+          "text": "Operating income was $115 million under non-GAAP measures. Free cash flow for the quarter was $204 million with a 30% margin.",
+          "similarity_score": 0.6959,
+          "source": "ref_passage:sentences_2-3"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_00",
+            "text": "Datadog announced Q3 revenue of $690 million, representing an increase of 26% year-over-year. Operating income was $115 million under non-GAAP measures.",
+            "similarity_score": 0.5688,
+            "source": "ref_passage:sentences_1-2"
+          },
+          {
+            "passage_id": "p_02",
+            "text": "Free cash flow for the quarter was $204 million with a 30% margin. The company had 3,490 customers with ARR of $100k or more.",
+            "similarity_score": 0.3043,
+            "source": "ref_passage:sentences_3-4"
+          }
+        ],
+        "entity_conflicts": [],
+        "arbitration_source": "local_nli",
+        "explanation": "Factually grounded and entailed by reference (P=0.99). Grounded in: \"Operating income was $115 million under non-GAAP measures. Free cash flow for the quarter was $204 million with a 30% ma...\""
+      },
+      {
+        "claim_id": "c_03",
+        "claim_text": "However, free cash flow declined into negative territory at -$42 million",
+        "start_char": 138,
+        "end_char": 211,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "probabilities": {
+          "entailment": 0.0007,
+          "neutral": 0.1,
+          "contradiction": 0.95
+        },
+        "best_evidence": {
+          "passage_id": "p_02",
+          "text": "Free cash flow for the quarter was $204 million with a 30% margin. The company had 3,490 customers with ARR of $100k or more.",
+          "similarity_score": 0.5593,
+          "source": "ref_passage:sentences_3-4"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_01",
+            "text": "Operating income was $115 million under non-GAAP measures. Free cash flow for the quarter was $204 million with a 30% margin.",
+            "similarity_score": 0.5084,
+            "source": "ref_passage:sentences_2-3"
+          },
+          {
+            "passage_id": "p_00",
+            "text": "Datadog announced Q3 revenue of $690 million, representing an increase of 26% year-over-year. Operating income was $115 million under non-GAAP measures.",
+            "similarity_score": 0.2391,
+            "source": "ref_passage:sentences_1-2"
+          }
+        ],
+        "entity_conflicts": [
+          {
+            "entity_type": "CURRENCY",
+            "claim_value": "$42 million",
+            "context_value": "$204 million, $100 k",
+            "discrepancy_type": "NUMERICAL_MISMATCH",
+            "description": "Financial figure '$42 million' in claim conflicts with reference: $204 million, $100 k."
+          }
+        ],
+        "arbitration_source": "entity_sieve",
+        "explanation": "Entity/Numerical conflict detected: Financial figure '$42 million' in claim conflicts with reference: $204 million, $100 k."
+      }
+    ],
+    "annotated_spans": [
+      {
+        "claim_id": "c_01",
+        "start": 0,
+        "end": 98,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "text": "Datadog reported Q3 revenue of $890 million, representing a robust 45% year-over-year growth rate."
+      },
+      {
+        "claim_id": "c_02",
+        "start": 99,
+        "end": 137,
+        "verdict": "VERIFIED",
+        "confidence": 0.987,
+        "text": "Operating income reached $115 million."
+      },
+      {
+        "claim_id": "c_03",
+        "start": 138,
+        "end": 211,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "text": "However, free cash flow declined into negative territory at -$42 million."
+      }
+    ],
+    "telemetry": {
+      "routing_tier": "local-only",
+      "claims_extracted": 3,
+      "passages_indexed": 4,
+      "cache_key": "ee11fd54373cb9d911332d1686d3c162be49fcfced3915fd4743b38340297d37",
+      "nli_model": "cross-encoder/nli-deberta-v3-small",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "throttles": {
+        "gemini": {
+          "active_rpm": 0,
+          "limit_rpm": 12,
+          "throttled": false
+        },
+        "groq": {
+          "active_rpm": 0,
+          "limit_rpm": 25,
+          "throttled": false
+        },
+        "openrouter": {
+          "active_rpm": 0,
+          "limit_rpm": 15,
+          "throttled": false
+        }
+      }
+    }
+  },
+  "scientific_fabrication": {
+    "inspection_id": "b6237874-7cb8-4d4c-bc52-51bc7ebc2208",
+    "cached": true,
+    "latency_ms": 0.48,
+    "device_used": "precomputed_demo",
+    "routing_tier": "local-only",
+    "metrics": {
+      "hallucination_score": 1.0,
+      "faithfulness_score": 0.0,
+      "total_claims": 3,
+      "verified_claims": 0,
+      "contradicted_claims": 3,
+      "ungrounded_claims": 0,
+      "ambiguous_claims": 0,
+      "hallucination_density": 1.0
+    },
+    "claims": [
+      {
+        "claim_id": "c_01",
+        "claim_text": "In October 2023, CERN researchers at the ATLAS detector confirmed the empirical discovery of the L-elemental graviton particle",
+        "start_char": 0,
+        "end_char": 127,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "probabilities": {
+          "entailment": 0.0,
+          "neutral": 0.0002,
+          "contradiction": 0.95
+        },
+        "best_evidence": {
+          "passage_id": "p_01",
+          "text": "Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates. No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+          "similarity_score": 0.636,
+          "source": "ref_passage:sentences_2-3"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_02",
+            "text": "No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+            "similarity_score": 0.5991,
+            "source": "ref_passage:sentences_3-3"
+          },
+          {
+            "passage_id": "p_00",
+            "text": "The Large Hadron Collider (LHC) at CERN completed Run 3 collisions in 2023 studying proton-proton interactions. Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates.",
+            "similarity_score": 0.5259,
+            "source": "ref_passage:sentences_1-2"
+          }
+        ],
+        "entity_conflicts": [
+          {
+            "entity_type": "ENTITY",
+            "claim_value": "In October",
+            "context_value": "Not found in reference",
+            "discrepancy_type": "UNGROUNDED_ENTITY",
+            "description": "Entity 'In October' is completely absent from the reference passage."
+          }
+        ],
+        "arbitration_source": "entity_sieve",
+        "explanation": "Entity/Numerical conflict detected: Entity 'In October' is completely absent from the reference passage."
+      },
+      {
+        "claim_id": "c_02",
+        "claim_text": "The paper was authored by Dr. Elena Rostova and reported a 5.2 sigma significance level",
+        "start_char": 128,
+        "end_char": 216,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "probabilities": {
+          "entailment": 0.0001,
+          "neutral": 0.1,
+          "contradiction": 0.95
+        },
+        "best_evidence": {
+          "passage_id": "p_00",
+          "text": "The Large Hadron Collider (LHC) at CERN completed Run 3 collisions in 2023 studying proton-proton interactions. Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates.",
+          "similarity_score": 0.2095,
+          "source": "ref_passage:sentences_1-2"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_01",
+            "text": "Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates. No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+            "similarity_score": 0.1566,
+            "source": "ref_passage:sentences_2-3"
+          },
+          {
+            "passage_id": "p_02",
+            "text": "No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+            "similarity_score": 0.1025,
+            "source": "ref_passage:sentences_3-3"
+          }
+        ],
+        "entity_conflicts": [
+          {
+            "entity_type": "ENTITY",
+            "claim_value": "Elena Rostova",
+            "context_value": "Not found in reference",
+            "discrepancy_type": "UNGROUNDED_ENTITY",
+            "description": "Entity 'Elena Rostova' is completely absent from the reference passage."
+          }
+        ],
+        "arbitration_source": "entity_sieve",
+        "explanation": "Entity/Numerical conflict detected: Entity 'Elena Rostova' is completely absent from the reference passage."
+      },
+      {
+        "claim_id": "c_03",
+        "claim_text": "This confirms quantum gravitational coupling at tera-electronvolt scales",
+        "start_char": 217,
+        "end_char": 290,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.999,
+        "probabilities": {
+          "entailment": 0.0,
+          "neutral": 0.0015,
+          "contradiction": 0.9985
+        },
+        "best_evidence": {
+          "passage_id": "p_01",
+          "text": "Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates. No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+          "similarity_score": 0.2408,
+          "source": "ref_passage:sentences_2-3"
+        },
+        "alternative_evidence": [
+          {
+            "passage_id": "p_02",
+            "text": "No experimental evidence for gravitons or hypothetical 'L-elemental' particles exists, and no such particle has ever been observed at CERN.",
+            "similarity_score": 0.199,
+            "source": "ref_passage:sentences_3-3"
+          },
+          {
+            "passage_id": "p_00",
+            "text": "The Large Hadron Collider (LHC) at CERN completed Run 3 collisions in 2023 studying proton-proton interactions. Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter candidates.",
+            "similarity_score": 0.1987,
+            "source": "ref_passage:sentences_1-2"
+          }
+        ],
+        "entity_conflicts": [],
+        "arbitration_source": "local_nli",
+        "explanation": "Direct factual contradiction detected (P=1.00). Reference asserts: \"Physics collaborations ATLAS and CMS continued investigations into Higgs boson properties and supersymmetric dark matter...\""
+      }
+    ],
+    "annotated_spans": [
+      {
+        "claim_id": "c_01",
+        "start": 0,
+        "end": 127,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "text": "In October 2023, CERN researchers at the ATLAS detector confirmed the empirical discovery of the L-elemental graviton particle."
+      },
+      {
+        "claim_id": "c_02",
+        "start": 128,
+        "end": 216,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.95,
+        "text": "The paper was authored by Dr. Elena Rostova and reported a 5.2 sigma significance level."
+      },
+      {
+        "claim_id": "c_03",
+        "start": 217,
+        "end": 290,
+        "verdict": "CONTRADICTED",
+        "confidence": 0.999,
+        "text": "This confirms quantum gravitational coupling at tera-electronvolt scales."
+      }
+    ],
+    "telemetry": {
+      "routing_tier": "local-only",
+      "claims_extracted": 3,
+      "passages_indexed": 3,
+      "cache_key": "23dcd29165f18bd81439d842d279a396e66be46f1b9b079d86f310da5e273836",
+      "nli_model": "cross-encoder/nli-deberta-v3-small",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "throttles": {
+        "gemini": {
+          "active_rpm": 0,
+          "limit_rpm": 12,
+          "throttled": false
+        },
+        "groq": {
+          "active_rpm": 0,
+          "limit_rpm": 25,
+          "throttled": false
+        },
+        "openrouter": {
+          "active_rpm": 0,
+          "limit_rpm": 15,
+          "throttled": false
+        }
+      }
+    }
   }
 };

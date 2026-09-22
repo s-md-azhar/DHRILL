@@ -150,7 +150,6 @@ export default function App() {
           health={health}
           routingTier={inspectionResult?.routing_tier}
           onOpenSettings={() => setSettingsOpen(true)}
-          onReset={handleReset}
           theme={theme}
           onToggleTheme={handleToggleTheme}
         />

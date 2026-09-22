@@ -71,312 +71,763 @@ DEMO_CASES: List[BenchmarkCase] = [
 
 
 # Pre-computed inspection results for bulletproof offline demos
-PRECOMPUTED_DEMO_RESULTS: Dict[str, Dict[str, Any]] = {
-    "clinical_dosage": {
-        "inspection_id": "demo-clinical-dosage-001",
-        "cached": True,
-        "latency_ms": 0.42,
-        "device_used": "precomputed_demo",
-        "metrics": {
-            "hallucination_score": 0.667,
-            "faithfulness_score": 0.333,
-            "total_claims": 3,
-            "verified_claims": 1,
-            "contradicted_claims": 2,
-            "ungrounded_claims": 0,
-            "ambiguous_claims": 0,
-            "hallucination_density": 0.667
-        },
-        "claims": [
-            {
-                "claim_id": "c_01",
-                "claim_text": "Metformin is safely indicated in patients with renal dysfunction down to an eGFR of 15 mL/min/1.73 m²",
-                "start_char": 0,
-                "end_char": 102,
-                "verdict": "CONTRADICTED",
-                "confidence": 0.96,
-                "probabilities": {"entailment": 0.02, "neutral": 0.02, "contradiction": 0.96},
-                "best_evidence": {
-                    "passage_id": "p_00",
-                    "text": "Metformin is contraindicated in patients with severe renal impairment, specifically an estimated glomerular filtration rate (eGFR) below 30 mL/min/1.73 m².",
-                    "similarity_score": 0.912,
-                    "source": "ref_passage:sentences_1-2"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [
-                    {
-                        "entity_type": "NUMBER",
-                        "claim_value": "15",
-                        "context_value": "30",
-                        "discrepancy_type": "NUMERICAL_MISMATCH",
-                        "description": "eGFR limit '15' in claim directly contradicts contraindicated threshold '30' in reference."
-                    }
-                ],
-                "arbitration_source": "entity_sieve",
-                "explanation": "Critical clinical mismatch: Claim claims safety down to eGFR 15, whereas reference explicitly contraindicates below 30 mL/min."
-            },
-            {
-                "claim_id": "c_02",
-                "claim_text": "For individuals with moderate impairment between 30 and 44 mL/min, clinicians can safely escalate dosages up to 2500 mg daily",
-                "start_char": 103,
-                "end_char": 229,
-                "verdict": "CONTRADICTED",
-                "confidence": 0.94,
-                "probabilities": {"entailment": 0.03, "neutral": 0.03, "contradiction": 0.94},
-                "best_evidence": {
-                    "passage_id": "p_01",
-                    "text": "For patients with an eGFR between 30 and 44 mL/min/1.73 m², the maximum recommended daily dose is 1000 mg.",
-                    "similarity_score": 0.884,
-                    "source": "ref_passage:sentences_2-3"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [
-                    {
-                        "entity_type": "NUMBER",
-                        "claim_value": "2500",
-                        "context_value": "1000",
-                        "discrepancy_type": "NUMERICAL_MISMATCH",
-                        "description": "Daily dose '2500 mg' in claim exceeds maximum recommended cap of '1000 mg'."
-                    }
-                ],
-                "arbitration_source": "entity_sieve",
-                "explanation": "Dosage inflation: Reference caps dose at 1000 mg for eGFR 30-44, but response dangerously advises escalating to 2500 mg."
-            },
-            {
-                "claim_id": "c_03",
-                "claim_text": "Annual creatinine monitoring is strictly required",
-                "start_char": 230,
-                "end_char": 280,
-                "verdict": "VERIFIED",
-                "confidence": 0.93,
-                "probabilities": {"entailment": 0.93, "neutral": 0.05, "contradiction": 0.02},
-                "best_evidence": {
-                    "passage_id": "p_02",
-                    "text": "Serum creatinine and eGFR must be monitored at least annually.",
-                    "similarity_score": 0.895,
-                    "source": "ref_passage:sentences_3-4"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [],
-                "arbitration_source": "local_nli",
-                "explanation": "Fully grounded and entailed by reference mandate for annual monitoring."
-            }
-        ],
-        "annotated_spans": [
-            {"claim_id": "c_01", "start": 0, "end": 102, "verdict": "CONTRADICTED", "confidence": 0.96, "text": "Metformin is safely indicated in patients with renal dysfunction down to an eGFR of 15 mL/min/1.73 m²."},
-            {"claim_id": "c_02", "start": 103, "end": 229, "verdict": "CONTRADICTED", "confidence": 0.94, "text": "For individuals with moderate impairment between 30 and 44 mL/min, clinicians can safely escalate dosages up to 2500 mg daily."},
-            {"claim_id": "c_03", "start": 230, "end": 280, "verdict": "VERIFIED", "confidence": 0.93, "text": "Annual creatinine monitoring is strictly required."}
-        ],
-        "telemetry": {
-            "demo_mode": True,
-            "acoustic_bore_depth": 3,
-            "passages_indexed": 3
-        }
-    },
-    "historical_distortion": {
-        "inspection_id": "demo-history-002",
-        "cached": True,
-        "latency_ms": 0.38,
-        "device_used": "precomputed_demo",
-        "metrics": {
-            "hallucination_score": 0.75,
-            "faithfulness_score": 0.25,
-            "total_claims": 4,
-            "verified_claims": 1,
-            "contradicted_claims": 3,
-            "ungrounded_claims": 0,
-            "ambiguous_claims": 0,
-            "hallucination_density": 0.75
-        },
-        "claims": [
-            {
-                "claim_id": "c_01",
-                "claim_text": "The Treaty of Portsmouth was signed in November 1912",
-                "start_char": 0,
-                "end_char": 52,
-                "verdict": "CONTRADICTED",
-                "confidence": 0.98,
-                "probabilities": {"entailment": 0.01, "neutral": 0.01, "contradiction": 0.98},
-                "best_evidence": {
-                    "passage_id": "p_00",
-                    "text": "The Treaty of Portsmouth was formally signed on September 5, 1905, at the Portsmouth Naval Shipyard.",
-                    "similarity_score": 0.93,
-                    "source": "ref_passage:sentences_1-2"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [
-                    {
-                        "entity_type": "DATE",
-                        "claim_value": "1912",
-                        "context_value": "1905",
-                        "discrepancy_type": "DATE_MISMATCH",
-                        "description": "Year '1912' conflicts with actual signing year '1905'."
-                    }
-                ],
-                "arbitration_source": "entity_sieve",
-                "explanation": "Chronological conflict: Claim asserts 1912; reference confirms treaty was signed September 5, 1905."
-            },
-            {
-                "claim_id": "c_02",
-                "claim_text": "in Geneva, Switzerland",
-                "start_char": 53,
-                "end_char": 75,
-                "verdict": "CONTRADICTED",
-                "confidence": 0.91,
-                "probabilities": {"entailment": 0.04, "neutral": 0.05, "contradiction": 0.91},
-                "best_evidence": {
-                    "passage_id": "p_00",
-                    "text": "at the Portsmouth Naval Shipyard in Kittery, Maine, United States.",
-                    "similarity_score": 0.87,
-                    "source": "ref_passage:sentences_1-2"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [
-                    {
-                        "entity_type": "ENTITY",
-                        "claim_value": "Geneva, Switzerland",
-                        "context_value": "Portsmouth Naval Shipyard, Maine",
-                        "discrepancy_type": "UNGROUNDED_ENTITY",
-                        "description": "Location 'Geneva, Switzerland' conflicts with actual location 'Portsmouth Naval Shipyard in Kittery, Maine'."
-                    }
-                ],
-                "arbitration_source": "local_nli",
-                "explanation": "Geographic fabrication: Signed in Maine, USA, not Geneva, Switzerland."
-            },
-            {
-                "claim_id": "c_03",
-                "claim_text": "The diplomatic accords were brokered by President Woodrow Wilson following the Balkan Wars",
-                "start_char": 77,
-                "end_char": 168,
-                "verdict": "CONTRADICTED",
-                "confidence": 0.95,
-                "probabilities": {"entailment": 0.02, "neutral": 0.03, "contradiction": 0.95},
-                "best_evidence": {
-                    "passage_id": "p_01",
-                    "text": "Negotiations were brokered by United States President Theodore Roosevelt, concluding the Russo-Japanese War.",
-                    "similarity_score": 0.89,
-                    "source": "ref_passage:sentences_2-3"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [
-                    {
-                        "entity_type": "ENTITY",
-                        "claim_value": "Woodrow Wilson",
-                        "context_value": "Theodore Roosevelt",
-                        "discrepancy_type": "UNGROUNDED_ENTITY",
-                        "description": "Mediator asserted as Woodrow Wilson instead of Theodore Roosevelt."
-                    }
-                ],
-                "arbitration_source": "entity_sieve",
-                "explanation": "Presidential mediator substitution: Brokered by Theodore Roosevelt, not Woodrow Wilson."
-            },
-            {
-                "claim_id": "c_04",
-                "claim_text": "Theodore Roosevelt later endorsed the treaty during his presidency",
-                "start_char": 170,
-                "end_char": 236,
-                "verdict": "VERIFIED",
-                "confidence": 0.81,
-                "probabilities": {"entailment": 0.81, "neutral": 0.15, "contradiction": 0.04},
-                "best_evidence": {
-                    "passage_id": "p_01",
-                    "text": "Negotiations were brokered by United States President Theodore Roosevelt, who received the Nobel Peace Prize.",
-                    "similarity_score": 0.84,
-                    "source": "ref_passage:sentences_2-3"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [],
-                "arbitration_source": "local_nli",
-                "explanation": "Entailed: Roosevelt was intimately connected to the treaty as its chief architect."
-            }
-        ],
-        "annotated_spans": [
-            {"claim_id": "c_01", "start": 0, "end": 52, "verdict": "CONTRADICTED", "confidence": 0.98, "text": "The Treaty of Portsmouth was signed in November 1912"},
-            {"claim_id": "c_02", "start": 53, "end": 75, "verdict": "CONTRADICTED", "confidence": 0.91, "text": "in Geneva, Switzerland."},
-            {"claim_id": "c_03", "start": 77, "end": 168, "verdict": "CONTRADICTED", "confidence": 0.95, "text": "The diplomatic accords were brokered by President Woodrow Wilson following the Balkan Wars."},
-            {"claim_id": "c_04", "start": 170, "end": 236, "verdict": "VERIFIED", "confidence": 0.81, "text": "Theodore Roosevelt later endorsed the treaty during his presidency."}
-        ],
-        "telemetry": {"demo_mode": True, "acoustic_bore_depth": 4}
-    },
-    "grounded_truth": {
-        "inspection_id": "demo-truth-005",
-        "cached": True,
-        "latency_ms": 0.35,
-        "device_used": "precomputed_demo",
-        "metrics": {
-            "hallucination_score": 0.0,
-            "faithfulness_score": 1.0,
-            "total_claims": 3,
-            "verified_claims": 3,
-            "contradicted_claims": 0,
-            "ungrounded_claims": 0,
-            "ambiguous_claims": 0,
-            "hallucination_density": 0.0
-        },
-        "claims": [
-            {
-                "claim_id": "c_01",
-                "claim_text": "Scaled Dot-Product Attention operates on query, key, and value matrices Q, K, and V",
-                "start_char": 0,
-                "end_char": 83,
-                "verdict": "VERIFIED",
-                "confidence": 0.97,
-                "probabilities": {"entailment": 0.97, "neutral": 0.02, "contradiction": 0.01},
-                "best_evidence": {
-                    "passage_id": "p_00",
-                    "text": "Scaled Dot-Product Attention is computed on queries Q, keys K, and values V with dimension d_k.",
-                    "similarity_score": 0.95,
-                    "source": "ref_passage:sentences_1-2"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [],
-                "arbitration_source": "local_nli",
-                "explanation": "Strict semantic entailment from Attention Is All You Need (Vaswani et al., 2017)."
-            },
-            {
-                "claim_id": "c_02",
-                "claim_text": "It is formulated as Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V",
-                "start_char": 85,
-                "end_char": 154,
-                "verdict": "VERIFIED",
-                "confidence": 0.99,
-                "probabilities": {"entailment": 0.99, "neutral": 0.01, "contradiction": 0.00},
-                "best_evidence": {
-                    "passage_id": "p_01",
-                    "text": "The attention matrix is calculated as Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V.",
-                    "similarity_score": 0.98,
-                    "source": "ref_passage:sentences_1-2"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [],
-                "arbitration_source": "local_nli",
-                "explanation": "Exact mathematical identity verified against canonical definition."
-            },
-            {
-                "claim_id": "c_03",
-                "claim_text": "The factor 1 / sqrt(d_k) is applied as a scaling coefficient to counteract vanishing gradients when the inner dimension d_k is large",
-                "start_char": 156,
-                "end_char": 288,
-                "verdict": "VERIFIED",
-                "confidence": 0.95,
-                "probabilities": {"entailment": 0.95, "neutral": 0.04, "contradiction": 0.01},
-                "best_evidence": {
-                    "passage_id": "p_02",
-                    "text": "Scaling by 1 / sqrt(d_k) prevents dot products from growing excessively large for large dimensions, which would push softmax into regions with extremely small gradients.",
-                    "similarity_score": 0.94,
-                    "source": "ref_passage:sentences_2-3"
-                },
-                "alternative_evidence": [],
-                "entity_conflicts": [],
-                "arbitration_source": "local_nli",
-                "explanation": "Theoretical rationale matches original publication."
-            }
-        ],
-        "annotated_spans": [
-            {"claim_id": "c_01", "start": 0, "end": 83, "verdict": "VERIFIED", "confidence": 0.97, "text": "Scaled Dot-Product Attention operates on query, key, and value matrices Q, K, and V."},
-            {"claim_id": "c_02", "start": 85, "end": 154, "verdict": "VERIFIED", "confidence": 0.99, "text": "It is formulated as Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V."},
-            {"claim_id": "c_03", "start": 156, "end": 288, "verdict": "VERIFIED", "confidence": 0.95, "text": "The factor 1 / sqrt(d_k) is applied as a scaling coefficient to counteract vanishing gradients when the inner dimension d_k is large."}
-        ],
-        "telemetry": {"demo_mode": True, "acoustic_bore_depth": 3}
-    }
-}
+PRECOMPUTED_DEMO_RESULTS: Dict[str, Dict[str, Any]] = {   'clinical_dosage': {   'annotated_spans': [   {   'claim_id': 'c_01',
+                                                      'confidence': 0.96,
+                                                      'end': 102,
+                                                      'start': 0,
+                                                      'text': 'Metformin is safely indicated in patients with renal '
+                                                              'dysfunction down to an eGFR of 15 mL/min/1.73 m².',
+                                                      'verdict': 'CONTRADICTED'},
+                                                  {   'claim_id': 'c_02',
+                                                      'confidence': 0.94,
+                                                      'end': 229,
+                                                      'start': 103,
+                                                      'text': 'For individuals with moderate impairment between 30 and '
+                                                              '44 mL/min, clinicians can safely escalate dosages up to '
+                                                              '2500 mg daily.',
+                                                      'verdict': 'CONTRADICTED'},
+                                                  {   'claim_id': 'c_03',
+                                                      'confidence': 0.93,
+                                                      'end': 280,
+                                                      'start': 230,
+                                                      'text': 'Annual creatinine monitoring is strictly required.',
+                                                      'verdict': 'VERIFIED'}],
+                           'cached': True,
+                           'claims': [   {   'alternative_evidence': [],
+                                             'arbitration_source': 'entity_sieve',
+                                             'best_evidence': {   'passage_id': 'p_00',
+                                                                  'similarity_score': 0.912,
+                                                                  'source': 'ref_passage:sentences_1-2',
+                                                                  'text': 'Metformin is contraindicated in patients '
+                                                                          'with severe renal impairment, specifically '
+                                                                          'an estimated glomerular filtration rate '
+                                                                          '(eGFR) below 30 mL/min/1.73 m².'},
+                                             'claim_id': 'c_01',
+                                             'claim_text': 'Metformin is safely indicated in patients with renal '
+                                                           'dysfunction down to an eGFR of 15 mL/min/1.73 m²',
+                                             'confidence': 0.96,
+                                             'end_char': 102,
+                                             'entity_conflicts': [   {   'claim_value': '15',
+                                                                         'context_value': '30',
+                                                                         'description': "eGFR limit '15' in claim "
+                                                                                        'directly contradicts '
+                                                                                        'contraindicated threshold '
+                                                                                        "'30' in reference.",
+                                                                         'discrepancy_type': 'NUMERICAL_MISMATCH',
+                                                                         'entity_type': 'NUMBER'}],
+                                             'explanation': 'Critical clinical mismatch: Claim claims safety down to '
+                                                            'eGFR 15, whereas reference explicitly contraindicates '
+                                                            'below 30 mL/min.',
+                                             'probabilities': {   'contradiction': 0.96,
+                                                                  'entailment': 0.02,
+                                                                  'neutral': 0.02},
+                                             'start_char': 0,
+                                             'verdict': 'CONTRADICTED'},
+                                         {   'alternative_evidence': [],
+                                             'arbitration_source': 'entity_sieve',
+                                             'best_evidence': {   'passage_id': 'p_01',
+                                                                  'similarity_score': 0.884,
+                                                                  'source': 'ref_passage:sentences_2-3',
+                                                                  'text': 'For patients with an eGFR between 30 and 44 '
+                                                                          'mL/min/1.73 m², the maximum recommended '
+                                                                          'daily dose is 1000 mg.'},
+                                             'claim_id': 'c_02',
+                                             'claim_text': 'For individuals with moderate impairment between 30 and 44 '
+                                                           'mL/min, clinicians can safely escalate dosages up to 2500 '
+                                                           'mg daily',
+                                             'confidence': 0.94,
+                                             'end_char': 229,
+                                             'entity_conflicts': [   {   'claim_value': '2500',
+                                                                         'context_value': '1000',
+                                                                         'description': "Daily dose '2500 mg' in claim "
+                                                                                        'exceeds maximum recommended '
+                                                                                        "cap of '1000 mg'.",
+                                                                         'discrepancy_type': 'NUMERICAL_MISMATCH',
+                                                                         'entity_type': 'NUMBER'}],
+                                             'explanation': 'Dosage inflation: Reference caps dose at 1000 mg for eGFR '
+                                                            '30-44, but response dangerously advises escalating to '
+                                                            '2500 mg.',
+                                             'probabilities': {   'contradiction': 0.94,
+                                                                  'entailment': 0.03,
+                                                                  'neutral': 0.03},
+                                             'start_char': 103,
+                                             'verdict': 'CONTRADICTED'},
+                                         {   'alternative_evidence': [],
+                                             'arbitration_source': 'local_nli',
+                                             'best_evidence': {   'passage_id': 'p_02',
+                                                                  'similarity_score': 0.895,
+                                                                  'source': 'ref_passage:sentences_3-4',
+                                                                  'text': 'Serum creatinine and eGFR must be monitored '
+                                                                          'at least annually.'},
+                                             'claim_id': 'c_03',
+                                             'claim_text': 'Annual creatinine monitoring is strictly required',
+                                             'confidence': 0.93,
+                                             'end_char': 280,
+                                             'entity_conflicts': [],
+                                             'explanation': 'Fully grounded and entailed by reference mandate for '
+                                                            'annual monitoring.',
+                                             'probabilities': {   'contradiction': 0.02,
+                                                                  'entailment': 0.93,
+                                                                  'neutral': 0.05},
+                                             'start_char': 230,
+                                             'verdict': 'VERIFIED'}],
+                           'device_used': 'precomputed_demo',
+                           'inspection_id': 'demo-clinical-dosage-001',
+                           'latency_ms': 0.42,
+                           'metrics': {   'ambiguous_claims': 0,
+                                          'contradicted_claims': 2,
+                                          'faithfulness_score': 0.333,
+                                          'hallucination_density': 0.667,
+                                          'hallucination_score': 0.667,
+                                          'total_claims': 3,
+                                          'ungrounded_claims': 0,
+                                          'verified_claims': 1},
+                           'telemetry': {'acoustic_bore_depth': 3, 'demo_mode': True, 'passages_indexed': 3}},
+    'earnings_metrics': {   'annotated_spans': [   {   'claim_id': 'c_01',
+                                                       'confidence': 0.95,
+                                                       'end': 98,
+                                                       'start': 0,
+                                                       'text': 'Datadog reported Q3 revenue of $890 million, '
+                                                               'representing a robust 45% year-over-year growth rate.',
+                                                       'verdict': 'CONTRADICTED'},
+                                                   {   'claim_id': 'c_02',
+                                                       'confidence': 0.987,
+                                                       'end': 137,
+                                                       'start': 99,
+                                                       'text': 'Operating income reached $115 million.',
+                                                       'verdict': 'VERIFIED'},
+                                                   {   'claim_id': 'c_03',
+                                                       'confidence': 0.95,
+                                                       'end': 211,
+                                                       'start': 138,
+                                                       'text': 'However, free cash flow declined into negative '
+                                                               'territory at -$42 million.',
+                                                       'verdict': 'CONTRADICTED'}],
+                            'cached': True,
+                            'claims': [   {   'alternative_evidence': [   {   'passage_id': 'p_01',
+                                                                              'similarity_score': 0.3439,
+                                                                              'source': 'ref_passage:sentences_2-3',
+                                                                              'text': 'Operating income was $115 '
+                                                                                      'million under non-GAAP '
+                                                                                      'measures. Free cash flow for '
+                                                                                      'the quarter was $204 million '
+                                                                                      'with a 30% margin.'},
+                                                                          {   'passage_id': 'p_02',
+                                                                              'similarity_score': 0.3049,
+                                                                              'source': 'ref_passage:sentences_3-4',
+                                                                              'text': 'Free cash flow for the quarter '
+                                                                                      'was $204 million with a 30% '
+                                                                                      'margin. The company had 3,490 '
+                                                                                      'customers with ARR of $100k or '
+                                                                                      'more.'}],
+                                              'arbitration_source': 'entity_sieve',
+                                              'best_evidence': {   'passage_id': 'p_00',
+                                                                   'similarity_score': 0.7975,
+                                                                   'source': 'ref_passage:sentences_1-2',
+                                                                   'text': 'Datadog announced Q3 revenue of $690 '
+                                                                           'million, representing an increase of 26% '
+                                                                           'year-over-year. Operating income was $115 '
+                                                                           'million under non-GAAP measures.'},
+                                              'claim_id': 'c_01',
+                                              'claim_text': 'Datadog reported Q3 revenue of $890 million, representing '
+                                                            'a robust 45% year-over-year growth rate',
+                                              'confidence': 0.95,
+                                              'end_char': 98,
+                                              'entity_conflicts': [   {   'claim_value': '45%',
+                                                                          'context_value': '26%',
+                                                                          'description': "Percentage '45%' in claim "
+                                                                                         'contradicts reference '
+                                                                                         'percentage(s): 26%.',
+                                                                          'discrepancy_type': 'NUMERICAL_MISMATCH',
+                                                                          'entity_type': 'PERCENT'},
+                                                                      {   'claim_value': '$890 million',
+                                                                          'context_value': '$690 million, $115 million',
+                                                                          'description': "Financial figure '$890 "
+                                                                                         "million' in claim conflicts "
+                                                                                         'with reference: $690 '
+                                                                                         'million, $115 million.',
+                                                                          'discrepancy_type': 'NUMERICAL_MISMATCH',
+                                                                          'entity_type': 'CURRENCY'}],
+                                              'explanation': "Entity/Numerical conflict detected: Percentage '45%' in "
+                                                             'claim contradicts reference percentage(s): 26%.',
+                                              'probabilities': {   'contradiction': 0.95,
+                                                                   'entailment': 0.0002,
+                                                                   'neutral': 0.0015},
+                                              'start_char': 0,
+                                              'verdict': 'CONTRADICTED'},
+                                          {   'alternative_evidence': [   {   'passage_id': 'p_00',
+                                                                              'similarity_score': 0.5688,
+                                                                              'source': 'ref_passage:sentences_1-2',
+                                                                              'text': 'Datadog announced Q3 revenue of '
+                                                                                      '$690 million, representing an '
+                                                                                      'increase of 26% year-over-year. '
+                                                                                      'Operating income was $115 '
+                                                                                      'million under non-GAAP '
+                                                                                      'measures.'},
+                                                                          {   'passage_id': 'p_02',
+                                                                              'similarity_score': 0.3043,
+                                                                              'source': 'ref_passage:sentences_3-4',
+                                                                              'text': 'Free cash flow for the quarter '
+                                                                                      'was $204 million with a 30% '
+                                                                                      'margin. The company had 3,490 '
+                                                                                      'customers with ARR of $100k or '
+                                                                                      'more.'}],
+                                              'arbitration_source': 'local_nli',
+                                              'best_evidence': {   'passage_id': 'p_01',
+                                                                   'similarity_score': 0.6959,
+                                                                   'source': 'ref_passage:sentences_2-3',
+                                                                   'text': 'Operating income was $115 million under '
+                                                                           'non-GAAP measures. Free cash flow for the '
+                                                                           'quarter was $204 million with a 30% '
+                                                                           'margin.'},
+                                              'claim_id': 'c_02',
+                                              'claim_text': 'Operating income reached $115 million',
+                                              'confidence': 0.987,
+                                              'end_char': 137,
+                                              'entity_conflicts': [],
+                                              'explanation': 'Factually grounded and entailed by reference (P=0.99). '
+                                                             'Grounded in: "Operating income was $115 million under '
+                                                             'non-GAAP measures. Free cash flow for the quarter was '
+                                                             '$204 million with a 30% ma..."',
+                                              'probabilities': {   'contradiction': 0.0003,
+                                                                   'entailment': 0.9871,
+                                                                   'neutral': 0.0126},
+                                              'start_char': 99,
+                                              'verdict': 'VERIFIED'},
+                                          {   'alternative_evidence': [   {   'passage_id': 'p_01',
+                                                                              'similarity_score': 0.5084,
+                                                                              'source': 'ref_passage:sentences_2-3',
+                                                                              'text': 'Operating income was $115 '
+                                                                                      'million under non-GAAP '
+                                                                                      'measures. Free cash flow for '
+                                                                                      'the quarter was $204 million '
+                                                                                      'with a 30% margin.'},
+                                                                          {   'passage_id': 'p_00',
+                                                                              'similarity_score': 0.2391,
+                                                                              'source': 'ref_passage:sentences_1-2',
+                                                                              'text': 'Datadog announced Q3 revenue of '
+                                                                                      '$690 million, representing an '
+                                                                                      'increase of 26% year-over-year. '
+                                                                                      'Operating income was $115 '
+                                                                                      'million under non-GAAP '
+                                                                                      'measures.'}],
+                                              'arbitration_source': 'entity_sieve',
+                                              'best_evidence': {   'passage_id': 'p_02',
+                                                                   'similarity_score': 0.5593,
+                                                                   'source': 'ref_passage:sentences_3-4',
+                                                                   'text': 'Free cash flow for the quarter was $204 '
+                                                                           'million with a 30% margin. The company had '
+                                                                           '3,490 customers with ARR of $100k or '
+                                                                           'more.'},
+                                              'claim_id': 'c_03',
+                                              'claim_text': 'However, free cash flow declined into negative territory '
+                                                            'at -$42 million',
+                                              'confidence': 0.95,
+                                              'end_char': 211,
+                                              'entity_conflicts': [   {   'claim_value': '$42 million',
+                                                                          'context_value': '$204 million, $100 k',
+                                                                          'description': "Financial figure '$42 "
+                                                                                         "million' in claim conflicts "
+                                                                                         'with reference: $204 '
+                                                                                         'million, $100 k.',
+                                                                          'discrepancy_type': 'NUMERICAL_MISMATCH',
+                                                                          'entity_type': 'CURRENCY'}],
+                                              'explanation': 'Entity/Numerical conflict detected: Financial figure '
+                                                             "'$42 million' in claim conflicts with reference: $204 "
+                                                             'million, $100 k.',
+                                              'probabilities': {   'contradiction': 0.95,
+                                                                   'entailment': 0.0007,
+                                                                   'neutral': 0.1},
+                                              'start_char': 138,
+                                              'verdict': 'CONTRADICTED'}],
+                            'device_used': 'precomputed_demo',
+                            'inspection_id': 'cd62c5ec-2bfa-48de-bc3b-b01e8afe5739',
+                            'latency_ms': 0.45,
+                            'metrics': {   'ambiguous_claims': 0,
+                                           'contradicted_claims': 2,
+                                           'faithfulness_score': 0.333,
+                                           'hallucination_density': 0.667,
+                                           'hallucination_score': 0.667,
+                                           'total_claims': 3,
+                                           'ungrounded_claims': 0,
+                                           'verified_claims': 1},
+                            'routing_tier': 'local-only',
+                            'telemetry': {   'cache_key': 'ee11fd54373cb9d911332d1686d3c162be49fcfced3915fd4743b38340297d37',
+                                             'claims_extracted': 3,
+                                             'embedding_model': 'sentence-transformers/all-MiniLM-L6-v2',
+                                             'nli_model': 'cross-encoder/nli-deberta-v3-small',
+                                             'passages_indexed': 4,
+                                             'routing_tier': 'local-only',
+                                             'throttles': {   'gemini': {   'active_rpm': 0,
+                                                                            'limit_rpm': 12,
+                                                                            'throttled': False},
+                                                              'groq': {   'active_rpm': 0,
+                                                                          'limit_rpm': 25,
+                                                                          'throttled': False},
+                                                              'openrouter': {   'active_rpm': 0,
+                                                                                'limit_rpm': 15,
+                                                                                'throttled': False}}}},
+    'grounded_truth': {   'annotated_spans': [   {   'claim_id': 'c_01',
+                                                     'confidence': 0.97,
+                                                     'end': 83,
+                                                     'start': 0,
+                                                     'text': 'Scaled Dot-Product Attention operates on query, key, and '
+                                                             'value matrices Q, K, and V.',
+                                                     'verdict': 'VERIFIED'},
+                                                 {   'claim_id': 'c_02',
+                                                     'confidence': 0.99,
+                                                     'end': 154,
+                                                     'start': 85,
+                                                     'text': 'It is formulated as Attention(Q, K, V) = softmax(Q K^T / '
+                                                             'sqrt(d_k)) V.',
+                                                     'verdict': 'VERIFIED'},
+                                                 {   'claim_id': 'c_03',
+                                                     'confidence': 0.95,
+                                                     'end': 288,
+                                                     'start': 156,
+                                                     'text': 'The factor 1 / sqrt(d_k) is applied as a scaling '
+                                                             'coefficient to counteract vanishing gradients when the '
+                                                             'inner dimension d_k is large.',
+                                                     'verdict': 'VERIFIED'}],
+                          'cached': True,
+                          'claims': [   {   'alternative_evidence': [],
+                                            'arbitration_source': 'local_nli',
+                                            'best_evidence': {   'passage_id': 'p_00',
+                                                                 'similarity_score': 0.95,
+                                                                 'source': 'ref_passage:sentences_1-2',
+                                                                 'text': 'Scaled Dot-Product Attention is computed on '
+                                                                         'queries Q, keys K, and values V with '
+                                                                         'dimension d_k.'},
+                                            'claim_id': 'c_01',
+                                            'claim_text': 'Scaled Dot-Product Attention operates on query, key, and '
+                                                          'value matrices Q, K, and V',
+                                            'confidence': 0.97,
+                                            'end_char': 83,
+                                            'entity_conflicts': [],
+                                            'explanation': 'Strict semantic entailment from Attention Is All You Need '
+                                                           '(Vaswani et al., 2017).',
+                                            'probabilities': {   'contradiction': 0.01,
+                                                                 'entailment': 0.97,
+                                                                 'neutral': 0.02},
+                                            'start_char': 0,
+                                            'verdict': 'VERIFIED'},
+                                        {   'alternative_evidence': [],
+                                            'arbitration_source': 'local_nli',
+                                            'best_evidence': {   'passage_id': 'p_01',
+                                                                 'similarity_score': 0.98,
+                                                                 'source': 'ref_passage:sentences_1-2',
+                                                                 'text': 'The attention matrix is calculated as '
+                                                                         'Attention(Q, K, V) = softmax(Q K^T / '
+                                                                         'sqrt(d_k)) V.'},
+                                            'claim_id': 'c_02',
+                                            'claim_text': 'It is formulated as Attention(Q, K, V) = softmax(Q K^T / '
+                                                          'sqrt(d_k)) V',
+                                            'confidence': 0.99,
+                                            'end_char': 154,
+                                            'entity_conflicts': [],
+                                            'explanation': 'Exact mathematical identity verified against canonical '
+                                                           'definition.',
+                                            'probabilities': {   'contradiction': 0.0,
+                                                                 'entailment': 0.99,
+                                                                 'neutral': 0.01},
+                                            'start_char': 85,
+                                            'verdict': 'VERIFIED'},
+                                        {   'alternative_evidence': [],
+                                            'arbitration_source': 'local_nli',
+                                            'best_evidence': {   'passage_id': 'p_02',
+                                                                 'similarity_score': 0.94,
+                                                                 'source': 'ref_passage:sentences_2-3',
+                                                                 'text': 'Scaling by 1 / sqrt(d_k) prevents dot '
+                                                                         'products from growing excessively large for '
+                                                                         'large dimensions, which would push softmax '
+                                                                         'into regions with extremely small '
+                                                                         'gradients.'},
+                                            'claim_id': 'c_03',
+                                            'claim_text': 'The factor 1 / sqrt(d_k) is applied as a scaling '
+                                                          'coefficient to counteract vanishing gradients when the '
+                                                          'inner dimension d_k is large',
+                                            'confidence': 0.95,
+                                            'end_char': 288,
+                                            'entity_conflicts': [],
+                                            'explanation': 'Theoretical rationale matches original publication.',
+                                            'probabilities': {   'contradiction': 0.01,
+                                                                 'entailment': 0.95,
+                                                                 'neutral': 0.04},
+                                            'start_char': 156,
+                                            'verdict': 'VERIFIED'}],
+                          'device_used': 'precomputed_demo',
+                          'inspection_id': 'demo-truth-005',
+                          'latency_ms': 0.35,
+                          'metrics': {   'ambiguous_claims': 0,
+                                         'contradicted_claims': 0,
+                                         'faithfulness_score': 1.0,
+                                         'hallucination_density': 0.0,
+                                         'hallucination_score': 0.0,
+                                         'total_claims': 3,
+                                         'ungrounded_claims': 0,
+                                         'verified_claims': 3},
+                          'telemetry': {'acoustic_bore_depth': 3, 'demo_mode': True}},
+    'historical_distortion': {   'annotated_spans': [   {   'claim_id': 'c_01',
+                                                            'confidence': 0.98,
+                                                            'end': 52,
+                                                            'start': 0,
+                                                            'text': 'The Treaty of Portsmouth was signed in November '
+                                                                    '1912',
+                                                            'verdict': 'CONTRADICTED'},
+                                                        {   'claim_id': 'c_02',
+                                                            'confidence': 0.91,
+                                                            'end': 75,
+                                                            'start': 53,
+                                                            'text': 'in Geneva, Switzerland.',
+                                                            'verdict': 'CONTRADICTED'},
+                                                        {   'claim_id': 'c_03',
+                                                            'confidence': 0.95,
+                                                            'end': 168,
+                                                            'start': 77,
+                                                            'text': 'The diplomatic accords were brokered by President '
+                                                                    'Woodrow Wilson following the Balkan Wars.',
+                                                            'verdict': 'CONTRADICTED'},
+                                                        {   'claim_id': 'c_04',
+                                                            'confidence': 0.81,
+                                                            'end': 236,
+                                                            'start': 170,
+                                                            'text': 'Theodore Roosevelt later endorsed the treaty '
+                                                                    'during his presidency.',
+                                                            'verdict': 'VERIFIED'}],
+                                 'cached': True,
+                                 'claims': [   {   'alternative_evidence': [],
+                                                   'arbitration_source': 'entity_sieve',
+                                                   'best_evidence': {   'passage_id': 'p_00',
+                                                                        'similarity_score': 0.93,
+                                                                        'source': 'ref_passage:sentences_1-2',
+                                                                        'text': 'The Treaty of Portsmouth was formally '
+                                                                                'signed on September 5, 1905, at the '
+                                                                                'Portsmouth Naval Shipyard.'},
+                                                   'claim_id': 'c_01',
+                                                   'claim_text': 'The Treaty of Portsmouth was signed in November 1912',
+                                                   'confidence': 0.98,
+                                                   'end_char': 52,
+                                                   'entity_conflicts': [   {   'claim_value': '1912',
+                                                                               'context_value': '1905',
+                                                                               'description': "Year '1912' conflicts "
+                                                                                              'with actual signing '
+                                                                                              "year '1905'.",
+                                                                               'discrepancy_type': 'DATE_MISMATCH',
+                                                                               'entity_type': 'DATE'}],
+                                                   'explanation': 'Chronological conflict: Claim asserts 1912; '
+                                                                  'reference confirms treaty was signed September 5, '
+                                                                  '1905.',
+                                                   'probabilities': {   'contradiction': 0.98,
+                                                                        'entailment': 0.01,
+                                                                        'neutral': 0.01},
+                                                   'start_char': 0,
+                                                   'verdict': 'CONTRADICTED'},
+                                               {   'alternative_evidence': [],
+                                                   'arbitration_source': 'local_nli',
+                                                   'best_evidence': {   'passage_id': 'p_00',
+                                                                        'similarity_score': 0.87,
+                                                                        'source': 'ref_passage:sentences_1-2',
+                                                                        'text': 'at the Portsmouth Naval Shipyard in '
+                                                                                'Kittery, Maine, United States.'},
+                                                   'claim_id': 'c_02',
+                                                   'claim_text': 'in Geneva, Switzerland',
+                                                   'confidence': 0.91,
+                                                   'end_char': 75,
+                                                   'entity_conflicts': [   {   'claim_value': 'Geneva, Switzerland',
+                                                                               'context_value': 'Portsmouth Naval '
+                                                                                                'Shipyard, Maine',
+                                                                               'description': "Location 'Geneva, "
+                                                                                              "Switzerland' conflicts "
+                                                                                              'with actual location '
+                                                                                              "'Portsmouth Naval "
+                                                                                              'Shipyard in Kittery, '
+                                                                                              "Maine'.",
+                                                                               'discrepancy_type': 'UNGROUNDED_ENTITY',
+                                                                               'entity_type': 'ENTITY'}],
+                                                   'explanation': 'Geographic fabrication: Signed in Maine, USA, not '
+                                                                  'Geneva, Switzerland.',
+                                                   'probabilities': {   'contradiction': 0.91,
+                                                                        'entailment': 0.04,
+                                                                        'neutral': 0.05},
+                                                   'start_char': 53,
+                                                   'verdict': 'CONTRADICTED'},
+                                               {   'alternative_evidence': [],
+                                                   'arbitration_source': 'entity_sieve',
+                                                   'best_evidence': {   'passage_id': 'p_01',
+                                                                        'similarity_score': 0.89,
+                                                                        'source': 'ref_passage:sentences_2-3',
+                                                                        'text': 'Negotiations were brokered by United '
+                                                                                'States President Theodore Roosevelt, '
+                                                                                'concluding the Russo-Japanese War.'},
+                                                   'claim_id': 'c_03',
+                                                   'claim_text': 'The diplomatic accords were brokered by President '
+                                                                 'Woodrow Wilson following the Balkan Wars',
+                                                   'confidence': 0.95,
+                                                   'end_char': 168,
+                                                   'entity_conflicts': [   {   'claim_value': 'Woodrow Wilson',
+                                                                               'context_value': 'Theodore Roosevelt',
+                                                                               'description': 'Mediator asserted as '
+                                                                                              'Woodrow Wilson instead '
+                                                                                              'of Theodore Roosevelt.',
+                                                                               'discrepancy_type': 'UNGROUNDED_ENTITY',
+                                                                               'entity_type': 'ENTITY'}],
+                                                   'explanation': 'Presidential mediator substitution: Brokered by '
+                                                                  'Theodore Roosevelt, not Woodrow Wilson.',
+                                                   'probabilities': {   'contradiction': 0.95,
+                                                                        'entailment': 0.02,
+                                                                        'neutral': 0.03},
+                                                   'start_char': 77,
+                                                   'verdict': 'CONTRADICTED'},
+                                               {   'alternative_evidence': [],
+                                                   'arbitration_source': 'local_nli',
+                                                   'best_evidence': {   'passage_id': 'p_01',
+                                                                        'similarity_score': 0.84,
+                                                                        'source': 'ref_passage:sentences_2-3',
+                                                                        'text': 'Negotiations were brokered by United '
+                                                                                'States President Theodore Roosevelt, '
+                                                                                'who received the Nobel Peace Prize.'},
+                                                   'claim_id': 'c_04',
+                                                   'claim_text': 'Theodore Roosevelt later endorsed the treaty during '
+                                                                 'his presidency',
+                                                   'confidence': 0.81,
+                                                   'end_char': 236,
+                                                   'entity_conflicts': [],
+                                                   'explanation': 'Entailed: Roosevelt was intimately connected to the '
+                                                                  'treaty as its chief architect.',
+                                                   'probabilities': {   'contradiction': 0.04,
+                                                                        'entailment': 0.81,
+                                                                        'neutral': 0.15},
+                                                   'start_char': 170,
+                                                   'verdict': 'VERIFIED'}],
+                                 'device_used': 'precomputed_demo',
+                                 'inspection_id': 'demo-history-002',
+                                 'latency_ms': 0.38,
+                                 'metrics': {   'ambiguous_claims': 0,
+                                                'contradicted_claims': 3,
+                                                'faithfulness_score': 0.25,
+                                                'hallucination_density': 0.75,
+                                                'hallucination_score': 0.75,
+                                                'total_claims': 4,
+                                                'ungrounded_claims': 0,
+                                                'verified_claims': 1},
+                                 'telemetry': {'acoustic_bore_depth': 4, 'demo_mode': True}},
+    'scientific_fabrication': {   'annotated_spans': [   {   'claim_id': 'c_01',
+                                                             'confidence': 0.95,
+                                                             'end': 127,
+                                                             'start': 0,
+                                                             'text': 'In October 2023, CERN researchers at the ATLAS '
+                                                                     'detector confirmed the empirical discovery of '
+                                                                     'the L-elemental graviton particle.',
+                                                             'verdict': 'CONTRADICTED'},
+                                                         {   'claim_id': 'c_02',
+                                                             'confidence': 0.95,
+                                                             'end': 216,
+                                                             'start': 128,
+                                                             'text': 'The paper was authored by Dr. Elena Rostova and '
+                                                                     'reported a 5.2 sigma significance level.',
+                                                             'verdict': 'CONTRADICTED'},
+                                                         {   'claim_id': 'c_03',
+                                                             'confidence': 0.999,
+                                                             'end': 290,
+                                                             'start': 217,
+                                                             'text': 'This confirms quantum gravitational coupling at '
+                                                                     'tera-electronvolt scales.',
+                                                             'verdict': 'CONTRADICTED'}],
+                                  'cached': True,
+                                  'claims': [   {   'alternative_evidence': [   {   'passage_id': 'p_02',
+                                                                                    'similarity_score': 0.5991,
+                                                                                    'source': 'ref_passage:sentences_3-3',
+                                                                                    'text': 'No experimental evidence '
+                                                                                            'for gravitons or '
+                                                                                            'hypothetical '
+                                                                                            "'L-elemental' particles "
+                                                                                            'exists, and no such '
+                                                                                            'particle has ever been '
+                                                                                            'observed at CERN.'},
+                                                                                {   'passage_id': 'p_00',
+                                                                                    'similarity_score': 0.5259,
+                                                                                    'source': 'ref_passage:sentences_1-2',
+                                                                                    'text': 'The Large Hadron Collider '
+                                                                                            '(LHC) at CERN completed '
+                                                                                            'Run 3 collisions in 2023 '
+                                                                                            'studying proton-proton '
+                                                                                            'interactions. Physics '
+                                                                                            'collaborations ATLAS and '
+                                                                                            'CMS continued '
+                                                                                            'investigations into Higgs '
+                                                                                            'boson properties and '
+                                                                                            'supersymmetric dark '
+                                                                                            'matter candidates.'}],
+                                                    'arbitration_source': 'entity_sieve',
+                                                    'best_evidence': {   'passage_id': 'p_01',
+                                                                         'similarity_score': 0.636,
+                                                                         'source': 'ref_passage:sentences_2-3',
+                                                                         'text': 'Physics collaborations ATLAS and CMS '
+                                                                                 'continued investigations into Higgs '
+                                                                                 'boson properties and supersymmetric '
+                                                                                 'dark matter candidates. No '
+                                                                                 'experimental evidence for gravitons '
+                                                                                 "or hypothetical 'L-elemental' "
+                                                                                 'particles exists, and no such '
+                                                                                 'particle has ever been observed at '
+                                                                                 'CERN.'},
+                                                    'claim_id': 'c_01',
+                                                    'claim_text': 'In October 2023, CERN researchers at the ATLAS '
+                                                                  'detector confirmed the empirical discovery of the '
+                                                                  'L-elemental graviton particle',
+                                                    'confidence': 0.95,
+                                                    'end_char': 127,
+                                                    'entity_conflicts': [   {   'claim_value': 'In October',
+                                                                                'context_value': 'Not found in '
+                                                                                                 'reference',
+                                                                                'description': "Entity 'In October' is "
+                                                                                               'completely absent from '
+                                                                                               'the reference passage.',
+                                                                                'discrepancy_type': 'UNGROUNDED_ENTITY',
+                                                                                'entity_type': 'ENTITY'}],
+                                                    'explanation': "Entity/Numerical conflict detected: Entity 'In "
+                                                                   "October' is completely absent from the reference "
+                                                                   'passage.',
+                                                    'probabilities': {   'contradiction': 0.95,
+                                                                         'entailment': 0.0,
+                                                                         'neutral': 0.0002},
+                                                    'start_char': 0,
+                                                    'verdict': 'CONTRADICTED'},
+                                                {   'alternative_evidence': [   {   'passage_id': 'p_01',
+                                                                                    'similarity_score': 0.1566,
+                                                                                    'source': 'ref_passage:sentences_2-3',
+                                                                                    'text': 'Physics collaborations '
+                                                                                            'ATLAS and CMS continued '
+                                                                                            'investigations into Higgs '
+                                                                                            'boson properties and '
+                                                                                            'supersymmetric dark '
+                                                                                            'matter candidates. No '
+                                                                                            'experimental evidence for '
+                                                                                            'gravitons or hypothetical '
+                                                                                            "'L-elemental' particles "
+                                                                                            'exists, and no such '
+                                                                                            'particle has ever been '
+                                                                                            'observed at CERN.'},
+                                                                                {   'passage_id': 'p_02',
+                                                                                    'similarity_score': 0.1025,
+                                                                                    'source': 'ref_passage:sentences_3-3',
+                                                                                    'text': 'No experimental evidence '
+                                                                                            'for gravitons or '
+                                                                                            'hypothetical '
+                                                                                            "'L-elemental' particles "
+                                                                                            'exists, and no such '
+                                                                                            'particle has ever been '
+                                                                                            'observed at CERN.'}],
+                                                    'arbitration_source': 'entity_sieve',
+                                                    'best_evidence': {   'passage_id': 'p_00',
+                                                                         'similarity_score': 0.2095,
+                                                                         'source': 'ref_passage:sentences_1-2',
+                                                                         'text': 'The Large Hadron Collider (LHC) at '
+                                                                                 'CERN completed Run 3 collisions in '
+                                                                                 '2023 studying proton-proton '
+                                                                                 'interactions. Physics collaborations '
+                                                                                 'ATLAS and CMS continued '
+                                                                                 'investigations into Higgs boson '
+                                                                                 'properties and supersymmetric dark '
+                                                                                 'matter candidates.'},
+                                                    'claim_id': 'c_02',
+                                                    'claim_text': 'The paper was authored by Dr. Elena Rostova and '
+                                                                  'reported a 5.2 sigma significance level',
+                                                    'confidence': 0.95,
+                                                    'end_char': 216,
+                                                    'entity_conflicts': [   {   'claim_value': 'Elena Rostova',
+                                                                                'context_value': 'Not found in '
+                                                                                                 'reference',
+                                                                                'description': "Entity 'Elena Rostova' "
+                                                                                               'is completely absent '
+                                                                                               'from the reference '
+                                                                                               'passage.',
+                                                                                'discrepancy_type': 'UNGROUNDED_ENTITY',
+                                                                                'entity_type': 'ENTITY'}],
+                                                    'explanation': "Entity/Numerical conflict detected: Entity 'Elena "
+                                                                   "Rostova' is completely absent from the reference "
+                                                                   'passage.',
+                                                    'probabilities': {   'contradiction': 0.95,
+                                                                         'entailment': 0.0001,
+                                                                         'neutral': 0.1},
+                                                    'start_char': 128,
+                                                    'verdict': 'CONTRADICTED'},
+                                                {   'alternative_evidence': [   {   'passage_id': 'p_02',
+                                                                                    'similarity_score': 0.199,
+                                                                                    'source': 'ref_passage:sentences_3-3',
+                                                                                    'text': 'No experimental evidence '
+                                                                                            'for gravitons or '
+                                                                                            'hypothetical '
+                                                                                            "'L-elemental' particles "
+                                                                                            'exists, and no such '
+                                                                                            'particle has ever been '
+                                                                                            'observed at CERN.'},
+                                                                                {   'passage_id': 'p_00',
+                                                                                    'similarity_score': 0.1987,
+                                                                                    'source': 'ref_passage:sentences_1-2',
+                                                                                    'text': 'The Large Hadron Collider '
+                                                                                            '(LHC) at CERN completed '
+                                                                                            'Run 3 collisions in 2023 '
+                                                                                            'studying proton-proton '
+                                                                                            'interactions. Physics '
+                                                                                            'collaborations ATLAS and '
+                                                                                            'CMS continued '
+                                                                                            'investigations into Higgs '
+                                                                                            'boson properties and '
+                                                                                            'supersymmetric dark '
+                                                                                            'matter candidates.'}],
+                                                    'arbitration_source': 'local_nli',
+                                                    'best_evidence': {   'passage_id': 'p_01',
+                                                                         'similarity_score': 0.2408,
+                                                                         'source': 'ref_passage:sentences_2-3',
+                                                                         'text': 'Physics collaborations ATLAS and CMS '
+                                                                                 'continued investigations into Higgs '
+                                                                                 'boson properties and supersymmetric '
+                                                                                 'dark matter candidates. No '
+                                                                                 'experimental evidence for gravitons '
+                                                                                 "or hypothetical 'L-elemental' "
+                                                                                 'particles exists, and no such '
+                                                                                 'particle has ever been observed at '
+                                                                                 'CERN.'},
+                                                    'claim_id': 'c_03',
+                                                    'claim_text': 'This confirms quantum gravitational coupling at '
+                                                                  'tera-electronvolt scales',
+                                                    'confidence': 0.999,
+                                                    'end_char': 290,
+                                                    'entity_conflicts': [],
+                                                    'explanation': 'Direct factual contradiction detected (P=1.00). '
+                                                                   'Reference asserts: "Physics collaborations ATLAS '
+                                                                   'and CMS continued investigations into Higgs boson '
+                                                                   'properties and supersymmetric dark matter..."',
+                                                    'probabilities': {   'contradiction': 0.9985,
+                                                                         'entailment': 0.0,
+                                                                         'neutral': 0.0015},
+                                                    'start_char': 217,
+                                                    'verdict': 'CONTRADICTED'}],
+                                  'device_used': 'precomputed_demo',
+                                  'inspection_id': 'b6237874-7cb8-4d4c-bc52-51bc7ebc2208',
+                                  'latency_ms': 0.48,
+                                  'metrics': {   'ambiguous_claims': 0,
+                                                 'contradicted_claims': 3,
+                                                 'faithfulness_score': 0.0,
+                                                 'hallucination_density': 1.0,
+                                                 'hallucination_score': 1.0,
+                                                 'total_claims': 3,
+                                                 'ungrounded_claims': 0,
+                                                 'verified_claims': 0},
+                                  'routing_tier': 'local-only',
+                                  'telemetry': {   'cache_key': '23dcd29165f18bd81439d842d279a396e66be46f1b9b079d86f310da5e273836',
+                                                   'claims_extracted': 3,
+                                                   'embedding_model': 'sentence-transformers/all-MiniLM-L6-v2',
+                                                   'nli_model': 'cross-encoder/nli-deberta-v3-small',
+                                                   'passages_indexed': 3,
+                                                   'routing_tier': 'local-only',
+                                                   'throttles': {   'gemini': {   'active_rpm': 0,
+                                                                                  'limit_rpm': 12,
+                                                                                  'throttled': False},
+                                                                    'groq': {   'active_rpm': 0,
+                                                                                'limit_rpm': 25,
+                                                                                'throttled': False},
+                                                                    'openrouter': {   'active_rpm': 0,
+                                                                                      'limit_rpm': 15,
+                                                                                      'throttled': False}}}}}

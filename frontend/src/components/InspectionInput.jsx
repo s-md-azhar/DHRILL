@@ -172,7 +172,7 @@ export default function InspectionInput({
             aria-label="Reset workspace"
           >
             <RotateCcw size={13} />
-            <span>Reset Workspace</span>
+            <span>Reset</span>
           </button>
 
           {/* Crisp White Primary Action Button */}
