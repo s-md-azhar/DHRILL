@@ -13,6 +13,7 @@ export default function App() {
   const [health, setHealth] = useState(null);
   const [demoCases, setDemoCases] = useState([]);
   const [selectedCaseId, setSelectedCaseId] = useState(null);
+  const [userDraft, setUserDraft] = useState(null);
 
   const [responseText, setResponseText] = useState('');
   const [referenceContext, setReferenceContext] = useState('');
@@ -71,6 +72,15 @@ export default function App() {
   }, []);
 
   const handleSelectCase = async (caseItem) => {
+    // Save draft if user was working on custom text before selecting a preset
+    if (!selectedCaseId && (responseText.trim() || referenceContext.trim())) {
+      setUserDraft({
+        responseText,
+        referenceContext,
+        prompt
+      });
+    }
+
     setSelectedCaseId(caseItem.case_id);
     setResponseText(caseItem.response_text);
     setReferenceContext(caseItem.reference_context);
@@ -84,6 +94,25 @@ export default function App() {
       setInspectionResult(precomputed);
     } catch {
       setInspectionResult(null);
+    }
+  };
+
+  // When a preset scenario is un-clicked / toggled off, restore user's previous progress
+  const handleToggleOffScenario = () => {
+    setSelectedCaseId(null);
+    setSelectedClaimId(null);
+    setHoveredClaimId(null);
+    setInspectionResult(null);
+
+    if (userDraft) {
+      setResponseText(userDraft.responseText || '');
+      setReferenceContext(userDraft.referenceContext || '');
+      setPrompt(userDraft.prompt || '');
+      setUserDraft(null); // Consumed
+    } else {
+      setResponseText('');
+      setReferenceContext('');
+      setPrompt('');
     }
   };
 
@@ -120,6 +149,7 @@ export default function App() {
 
   const handleReset = () => {
     setSelectedCaseId(null);
+    setUserDraft(null); // Clear any saved draft progress on explicit reset
     setResponseText('');
     setReferenceContext('');
     setPrompt('');
@@ -169,6 +199,7 @@ export default function App() {
           <InspectionInput
             demoCases={demoCases}
             selectedCaseId={selectedCaseId}
+            setSelectedCaseId={setSelectedCaseId}
             onSelectCase={handleSelectCase}
             responseText={responseText}
             setResponseText={setResponseText}
@@ -179,6 +210,7 @@ export default function App() {
             onDrill={handleDrill}
             loading={loading}
             onReset={handleReset}
+            onToggleOffScenario={handleToggleOffScenario}
           />
 
           {/* Lower Half: Pipeline Trace / Results / Empty State */}

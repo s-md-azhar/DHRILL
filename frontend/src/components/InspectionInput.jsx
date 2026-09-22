@@ -4,6 +4,7 @@ import { Play, RotateCcw } from 'lucide-react';
 export default function InspectionInput({
   demoCases,
   selectedCaseId,
+  setSelectedCaseId,
   onSelectCase,
   responseText,
   setResponseText,
@@ -13,7 +14,8 @@ export default function InspectionInput({
   setPrompt,
   onDrill,
   loading,
-  onReset
+  onReset,
+  onToggleOffScenario
 }) {
   // Functional Resizable Split-Pane (Constraint 2)
   const [splitRatio, setSplitRatio] = useState(0.5);
@@ -52,10 +54,14 @@ export default function InspectionInput({
   const leftWords = responseText.trim() ? responseText.trim().split(/\s+/).length : 0;
   const rightWords = referenceContext.trim() ? referenceContext.trim().split(/\s+/).length : 0;
 
-  // Toggle behavior: clicking an active chip deselects and resets
+  // Toggle behavior: clicking an active chip unselects and restores user draft
   const handleChipClick = (c) => {
     if (selectedCaseId === c.case_id) {
-      onReset();
+      if (onToggleOffScenario) {
+        onToggleOffScenario();
+      } else {
+        onReset();
+      }
     } else {
       onSelectCase(c);
     }
@@ -104,7 +110,10 @@ export default function InspectionInput({
             <textarea
               className="editor-textarea"
               value={responseText}
-              onChange={(e) => setResponseText(e.target.value)}
+              onChange={(e) => {
+                setResponseText(e.target.value);
+                if (selectedCaseId && setSelectedCaseId) setSelectedCaseId(null);
+              }}
               placeholder="Paste raw model generation to cross-examine and extract atomic propositions..."
               spellCheck={false}
             />
@@ -133,7 +142,10 @@ export default function InspectionInput({
             <textarea
               className="editor-textarea"
               value={referenceContext}
-              onChange={(e) => setReferenceContext(e.target.value)}
+              onChange={(e) => {
+                setReferenceContext(e.target.value);
+                if (selectedCaseId && setSelectedCaseId) setSelectedCaseId(null);
+              }}
               placeholder="Paste authoritative source document, trial protocol, or retrieved RAG context for micro-indexing..."
               spellCheck={false}
             />
