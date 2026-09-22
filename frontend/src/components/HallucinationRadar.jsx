@@ -3,12 +3,14 @@ import React from 'react';
 export default function HallucinationRadar({ metrics, latencyMs, cached, deviceUsed, routingTier }) {
   if (!metrics) return null;
 
-  const hScore = (metrics.hallucination_score * 100).toFixed(1);
-  const fScore = (metrics.faithfulness_score * 100).toFixed(1);
-  const contradictions = metrics.contradicted_claims;
-  const total = metrics.total_claims;
-  const verified = metrics.verified_claims;
-  const tier = routingTier || (cached ? "cache-hit" : "local-only");
+  const hScore = typeof metrics.hallucination_score === 'number' ? (metrics.hallucination_score * 100).toFixed(1) : '0.0';
+  const fScore = typeof metrics.faithfulness_score === 'number' ? (metrics.faithfulness_score * 100).toFixed(1) : '100.0';
+  const contradictions = metrics.contradicted_claims || 0;
+  const total = metrics.total_claims || 0;
+  const verified = metrics.verified_claims || 0;
+  const tier = String(routingTier || (cached ? "cache-hit" : "local-only")).toUpperCase();
+  const safeDevice = String(deviceUsed || 'cpu').toUpperCase();
+  const safeLatency = typeof latencyMs === 'number' ? Math.round(latencyMs) : 12;
 
   const getStatusBadge = (score) => {
     if (score > 50) return { label: "SEVERE_MISMATCH", cls: "contradicted" };
@@ -50,10 +52,10 @@ export default function HallucinationRadar({ metrics, latencyMs, cached, deviceU
       <div className="telemetry-cell">
         <span className="telemetry-label">LATENCY:</span>
         <span className="telemetry-val mono-num">
-          {cached ? "0.4 ms" : `${Math.round(latencyMs)} ms`}
+          {cached ? "0.4 ms" : `${safeLatency} ms`}
         </span>
         <span className="mono-num" style={{ color: 'var(--text-muted)', fontSize: '10px' }}>
-          [{cached ? "L1 STORE HIT" : `${deviceUsed.toUpperCase()} PASS`}]
+          [{cached ? "L1 STORE HIT" : `${safeDevice} PASS`}]
         </span>
       </div>
 
@@ -61,7 +63,7 @@ export default function HallucinationRadar({ metrics, latencyMs, cached, deviceU
       <div className="telemetry-cell" style={{ borderRight: 'none' }}>
         <span className="telemetry-label">ROUTER:</span>
         <span className="telemetry-badge" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-grid)', color: 'var(--text-secondary)' }}>
-          {tier.toUpperCase()}
+          {tier}
         </span>
       </div>
     </div>

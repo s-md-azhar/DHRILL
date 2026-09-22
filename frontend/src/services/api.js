@@ -77,8 +77,14 @@ function analyzeClientSide(payload) {
 
   sentences.forEach((sentence, idx) => {
     const claimId = `c_${String(idx + 1).padStart(2, '0')}`;
-    const startChar = text.indexOf(sentence, searchIndex);
-    const endChar = startChar !== -1 ? startChar + sentence.length : searchIndex + sentence.length;
+    let startChar = text.indexOf(sentence, searchIndex);
+    if (startChar === -1) {
+      startChar = text.indexOf(sentence);
+    }
+    if (startChar === -1) {
+      startChar = Math.min(searchIndex, text.length);
+    }
+    const endChar = Math.min(text.length, startChar + sentence.length);
     searchIndex = endChar;
 
     const sentenceLower = sentence.toLowerCase();
@@ -126,10 +132,11 @@ function analyzeClientSide(payload) {
       if (context && !context.includes(num)) {
         hasNumericConflict = true;
         entityConflicts.push({
-          entity: num,
-          type: "NUMERIC_MISMATCH",
-          observed: num,
-          expected: "Differing or unrecorded value in source"
+          entity_type: "NUMERIC",
+          discrepancy_type: "NUMERICAL_MISMATCH",
+          claim_value: num,
+          context_value: "Differing or unrecorded value in source",
+          description: `Numeric figure '${num}' in proposition diverges from reference evidence.`
         });
       }
     }

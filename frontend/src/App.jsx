@@ -9,6 +9,60 @@ import SettingsModal from './components/SettingsModal';
 import { fetchHealth, fetchDemoCases, inspectGeneration, inspectDemoCase } from './services/api';
 import { Terminal } from 'lucide-react';
 
+class WorkbenchErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("[DHRILL Workbench Error Intercepted]", error, errorInfo);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false, error: null });
+    }
+  }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: null });
+    if (this.props.onReset) this.props.onReset();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="empty-workbench-state" style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.04)' }}>
+          <div className="empty-workbench-icon" style={{ color: '#ef4444' }}>
+            <Terminal size={22} />
+          </div>
+          <div className="empty-workbench-title" style={{ color: '#ef4444' }}>
+            Visualizer Standby (Cross-Examination Anomaly Intercepted)
+          </div>
+          <div className="empty-workbench-desc">
+            An unexpected condition occurred while displaying the proposition matrix ({this.state.error?.message || 'Verification Error'}). The workbench isolated the state to keep the workspace responsive.
+          </div>
+          <div style={{ marginTop: '14px' }}>
+            <button
+              className="btn-reset-workspace"
+              style={{ padding: '6px 14px', fontSize: '12px' }}
+              onClick={this.handleReset}
+            >
+              Reset Workbench
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const [health, setHealth] = useState(null);
   const [demoCases, setDemoCases] = useState([]);
@@ -214,44 +268,49 @@ export default function App() {
           />
 
           {/* Lower Half: Pipeline Trace / Results / Empty State */}
-          {loading ? (
-            <DrillingVisualizer />
-          ) : inspectionResult ? (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              {/* Inference Stream Highlighter */}
-              <SpanHighlighter
-                fullText={responseText}
-                spans={inspectionResult.annotated_spans}
-                selectedClaimId={selectedClaimId}
-                hoveredClaimId={hoveredClaimId}
-                onSelectClaim={(id) => {
-                  setSelectedClaimId(id);
-                  const el = document.getElementById(`claim-card-${id}`);
-                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }}
-                onHoverClaim={setHoveredClaimId}
-              />
+          <WorkbenchErrorBoundary
+            resetKey={`${selectedCaseId || 'custom'}_${responseText.length}_${inspectionResult?.inspection_id || 'none'}`}
+            onReset={handleReset}
+          >
+            {loading ? (
+              <DrillingVisualizer />
+            ) : inspectionResult ? (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                {/* Inference Stream Highlighter */}
+                <SpanHighlighter
+                  fullText={responseText}
+                  spans={inspectionResult.annotated_spans}
+                  selectedClaimId={selectedClaimId}
+                  hoveredClaimId={hoveredClaimId}
+                  onSelectClaim={(id) => {
+                    setSelectedClaimId(id);
+                    const el = document.getElementById(`claim-card-${id}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }}
+                  onHoverClaim={setHoveredClaimId}
+                />
 
-              {/* Claim Decomposition Matrix (CSS Grid, Viewport-Locked) */}
-              <ClaimEvidenceList
-                claims={inspectionResult.claims}
-                selectedClaimId={selectedClaimId}
-                hoveredClaimId={hoveredClaimId}
-                onSelectClaim={setSelectedClaimId}
-                onHoverClaim={setHoveredClaimId}
-              />
-            </div>
-          ) : (
-            <div className="empty-workbench-state">
-              <div className="empty-workbench-icon">
-                <Terminal size={22} />
+                {/* Claim Decomposition Matrix (CSS Grid, Viewport-Locked) */}
+                <ClaimEvidenceList
+                  claims={inspectionResult.claims}
+                  selectedClaimId={selectedClaimId}
+                  hoveredClaimId={hoveredClaimId}
+                  onSelectClaim={setSelectedClaimId}
+                  onHoverClaim={setHoveredClaimId}
+                />
               </div>
-              <div className="empty-workbench-title">Workbench Standby (No Active Inference)</div>
-              <div className="empty-workbench-desc">
-                Select a benchmark preset from the action strip or supply custom raw inference text and reference documentation to execute cross-attention NLI verification.
+            ) : (
+              <div className="empty-workbench-state">
+                <div className="empty-workbench-icon">
+                  <Terminal size={22} />
+                </div>
+                <div className="empty-workbench-title">Workbench Standby (No Active Inference)</div>
+                <div className="empty-workbench-desc">
+                  Select a benchmark preset from the action strip or supply custom raw inference text and reference documentation to execute cross-attention NLI verification.
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </WorkbenchErrorBoundary>
         </div>
 
         {/* 4. Configuration Modal */}
