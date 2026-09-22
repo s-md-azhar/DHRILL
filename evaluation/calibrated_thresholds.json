@@ -1,0 +1,7 @@
+{
+  "high_confidence_contradiction": 0.6,
+  "contradiction_delta_margin": 0.1,
+  "neutral_ambiguity_threshold": 0.65,
+  "validation_f1": 0.6222,
+  "validation_accuracy": 0.5143
+}

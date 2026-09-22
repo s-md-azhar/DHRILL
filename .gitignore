@@ -1,0 +1,50 @@
+# Secrets and Environment Variables (CRITICAL)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Python Virtual Environments & Dependencies
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# DHRILL Application Deterministic Caches
+.cache/
+backend/.cache/
+scratch/
+*.log
+
+# Frontend Node & Build Output
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+build/
+.npm/
+.vite/
+frontend/.vite/
+
+# OS & Editor Metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

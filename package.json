@@ -1,0 +1,21 @@
+{
+  "name": "dhrill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DHRILL: Deterministic Hallucination Reduction via Inspectable Logical Layers",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview"
+  },
+  "keywords": [
+    "nli",
+    "hallucination-detection",
+    "cross-encoder",
+    "deberta",
+    "fact-verification",
+    "grounding"
+  ],
+  "author": "Azhar Bukhari <smdazharbukhari@gmail.com>",
+  "license": "MIT"
+}
