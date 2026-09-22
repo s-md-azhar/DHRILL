@@ -179,6 +179,7 @@ export default function App() {
             setPrompt={setPrompt}
             onDrill={handleDrill}
             loading={loading}
+            onReset={handleReset}
           />
 
           {/* Lower Half: Pipeline Trace / Results / Empty State */}

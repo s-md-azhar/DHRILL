@@ -583,6 +583,54 @@ html, body, #root {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Grouped Action Buttons: Reset Workspace + Execute CTA */
+.action-buttons-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Prominent Reset Workspace Button */
+.btn-reset-workspace {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-grid);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 7px 14px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 120ms ease;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-reset-workspace svg {
+  transition: transform 200ms ease;
+}
+
+.btn-reset-workspace:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-active);
+  color: var(--text-primary);
+  transform: translateY(-0.5px);
+}
+
+.btn-reset-workspace:hover svg {
+  transform: rotate(-45deg);
+}
+
+.btn-reset-workspace:active {
+  transform: translateY(0);
+}
+
 /* Task 2: Crisp Contrast Execution Button Perfectly Centered */
 .btn-execute-nli {
   background: var(--btn-primary-bg);
@@ -1270,8 +1318,21 @@ html, body, #root {
     padding-bottom: 4px;
   }
 
-  .btn-execute-nli {
+  .action-buttons-group {
+    display: flex;
     width: 100%;
+    gap: 8px;
+  }
+
+  .btn-reset-workspace {
+    flex: 1;
+    justify-content: center;
+    height: 36px;
+  }
+
+  .btn-execute-nli {
+    flex: 2;
+    width: auto;
     justify-content: center;
     height: 36px;
   }

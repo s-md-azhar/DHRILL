@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play } from 'lucide-react';
+import { Play, RotateCcw } from 'lucide-react';
 
 export default function InspectionInput({
   demoCases,
@@ -12,7 +12,8 @@ export default function InspectionInput({
   prompt,
   setPrompt,
   onDrill,
-  loading
+  loading,
+  onReset
 }) {
   // Functional Resizable Split-Pane (Constraint 2)
   const [splitRatio, setSplitRatio] = useState(0.5);
@@ -50,6 +51,15 @@ export default function InspectionInput({
 
   const leftWords = responseText.trim() ? responseText.trim().split(/\s+/).length : 0;
   const rightWords = referenceContext.trim() ? referenceContext.trim().split(/\s+/).length : 0;
+
+  // Toggle behavior: clicking an active chip deselects and resets
+  const handleChipClick = (c) => {
+    if (selectedCaseId === c.case_id) {
+      onReset();
+    } else {
+      onSelectCase(c);
+    }
+  };
 
   // Curated Preset Formatting with Judicious Functional Emojis (Refactor 3)
   const getPresetConfig = (c) => {
@@ -131,18 +141,19 @@ export default function InspectionInput({
         </div>
       </div>
 
-      {/* Preset Action Strip with Functional Emojis & Crisp White CTA */}
+      {/* Preset Action Strip with Functional Emojis & Dual Action Buttons */}
       <div className="workbench-action-strip">
         <div className="preset-chip-row">
-          <span className="preset-label">BENCHMARK PRESETS:</span>
+          <span className="preset-label" title="Click a sample scenario to load test data; click again to unselect">SAMPLE TEST SCENARIOS:</span>
           {demoCases.map((c) => {
             const { emoji, label } = getPresetConfig(c);
+            const isActive = selectedCaseId === c.case_id;
             return (
               <button
                 key={c.case_id}
-                className={`preset-chip-btn ${selectedCaseId === c.case_id ? 'active' : ''}`}
-                onClick={() => onSelectCase(c)}
-                title={c.title}
+                className={`preset-chip-btn ${isActive ? 'active' : ''}`}
+                onClick={() => handleChipClick(c)}
+                title={isActive ? `Active: Click again to reset scenario` : `Click to load '${c.title}'`}
               >
                 <span>{emoji}</span>
                 <span>{label}</span>
@@ -151,16 +162,30 @@ export default function InspectionInput({
           })}
         </div>
 
-        {/* Crisp White Primary Action Button (Refactor 5) */}
-        <button
-          className="btn-execute-nli"
-          onClick={onDrill}
-          disabled={loading || !responseText.trim()}
-          title="Execute local DeBERTa-v3 cross-encoder and symbolic verification"
-        >
-          <Play size={13} fill="currentColor" />
-          <span>{loading ? "EXECUTING NLI PIPELINE..." : "Execute NLI Verification"}</span>
-        </button>
+        {/* Grouped Action Buttons: Reset Workspace + Execute NLI Verification */}
+        <div className="action-buttons-group">
+          {/* Prominent Reset Button positioned to the left of the Execute CTA */}
+          <button
+            className="btn-reset-workspace"
+            onClick={onReset}
+            title="Clear all textareas and reset workspace"
+            aria-label="Reset workspace"
+          >
+            <RotateCcw size={13} />
+            <span>Reset Workspace</span>
+          </button>
+
+          {/* Crisp White Primary Action Button */}
+          <button
+            className="btn-execute-nli"
+            onClick={onDrill}
+            disabled={loading || !responseText.trim()}
+            title="Execute local DeBERTa-v3 cross-encoder and symbolic verification"
+          >
+            <Play size={13} fill="currentColor" />
+            <span>{loading ? "EXECUTING NLI PIPELINE..." : "Execute NLI Verification"}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
